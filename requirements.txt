@@ -1,0 +1,7 @@
+streamlit
+langchain
+langchain_chroma
+langchain-google-genai
+youtube_transcript_api
+python-dotenv
+googletrans==4.0.0-rc1
