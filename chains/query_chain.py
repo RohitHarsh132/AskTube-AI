@@ -11,6 +11,7 @@ load_dotenv()
 def preprocess_query(question):
     """
     Preprocess user query to improve retrieval
+    Enhanced with better stop word filtering and context preservation
     """
     # Clean the question
     question = question.strip()
