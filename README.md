@@ -1,6 +1,6 @@
 # 🎬 AskTube AI
 
-**AskTube AI** is a Streamlit-powered web app that lets you ask questions about any YouTube video and get instant, AI-generated answers based on the video’s transcript. Just paste a YouTube link, and start chatting with your video!
+**AskTube AI** is a Streamlit-powered web app that lets you ask questions about any YouTube video and get instant, AI-generated answers based on the video's transcript. Just paste a YouTube link, and start chatting with your video!
 
 ---
 
@@ -84,16 +84,16 @@
 ## ❓ FAQ
 
 - **Do I need the `.devcontainer` folder?**  
-  No, it’s only for development container setups. You can safely delete it if you don’t use Dev Containers.
+  No, it's only for development container setups. You can safely delete it if you don't use Dev Containers.
 
 - **What if a video has no transcript?**  
-  The app will show an error if the transcript can’t be fetched.
+  The app will show an error if the transcript can't be fetched.
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
+Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
 ---
 
