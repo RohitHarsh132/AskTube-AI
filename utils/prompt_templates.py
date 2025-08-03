@@ -16,6 +16,7 @@ def get_prompt_template():
         8. If the question is about specific details, provide exact information from the video
         9. If the question is about timestamps or timing, mention if that information is available
         10. Structure your answer logically and use bullet points when helpful
+        11. Enhanced support for multilingual content including Indian languages
 
         CONTEXT FROM VIDEO TRANSCRIPT:
         {context}
