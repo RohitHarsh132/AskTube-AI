@@ -5,6 +5,7 @@ def extract_video_id(url: str) -> str:
     import re
     
     # Handle various YouTube URL formats
+    # Enhanced URL pattern matching for better compatibility
     patterns = [
         r"(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})",
         r"youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})",
@@ -51,6 +52,22 @@ def get_transcript(video_id: str, language: str = 'en') -> str:
             return " ".join([entry['text'] for entry in response])
         except NoTranscriptFound:
             pass
+        
+        # Enhanced language fallback for Indian languages
+        indian_languages = ['gu', 'hi', 'bn', 'ta', 'te', 'kn', 'ml', 'pa', 'or', 'as']
+        
+        # If requested language is Indian, try other Indian languages first
+        if language in indian_languages:
+            for indian_lang in indian_languages:
+                if indian_lang != language:
+                    try:
+                        response = YouTubeTranscriptApi.get_transcript(video_id, languages=[indian_lang])
+                        transcript_text = " ".join([entry['text'] for entry in response])
+                        print(f"Found transcript in {indian_lang}, translating to English...")
+                        translated = translator.translate(transcript_text, dest='en')
+                        return translated.text
+                    except NoTranscriptFound:
+                        continue
         
         # If requested language not found, try to find any English variant
         for transcript in transcript_list:
