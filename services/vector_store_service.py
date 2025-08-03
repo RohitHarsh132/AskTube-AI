@@ -6,8 +6,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def split_text(text: str, chunk_size=500, chunk_overlap=100):
-    splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+def split_text(text: str, chunk_size=1000, chunk_overlap=200):
+    """
+    Split text into chunks with better parameters for RAG
+    - Larger chunks (1000 chars) for better context
+    - More overlap (200 chars) to avoid missing information at boundaries
+    """
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=len,
+        separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""]
+    )
     return splitter.create_documents([text])
 
 def setup_vector_store(video_id: str, texts):
@@ -28,4 +38,13 @@ def setup_vector_store(video_id: str, texts):
     if len(vector_store.get()["ids"]) == 0:
         vector_store.add_documents(texts)
 
-    return vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+    # Use hybrid search: combination of similarity and keyword search
+    retriever = vector_store.as_retriever(
+        search_type="mmr",  # Maximum Marginal Relevance - better diversity
+        search_kwargs={
+            "k": 15,  # Get more candidates
+            "fetch_k": 30,  # Fetch more for better selection
+            "lambda_mult": 0.7  # Balance between relevance and diversity
+        }
+    )
+    return retriever

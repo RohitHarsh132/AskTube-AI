@@ -4,11 +4,42 @@ from langchain_core.output_parsers import StrOutputParser
 from utils.prompt_templates import get_prompt_template
 from dotenv import load_dotenv
 import os
+import re
 
 load_dotenv()
 
+def preprocess_query(question):
+    """
+    Preprocess user query to improve retrieval
+    """
+    # Clean the question
+    question = question.strip()
+    
+    # Extract key terms for better search
+    # Remove common words that don't help with search
+    stop_words = {'what', 'is', 'are', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'this', 'that', 'these', 'those'}
+    
+    # Keep the original question for context, but also create search terms
+    search_terms = ' '.join([word for word in question.lower().split() if word not in stop_words])
+    
+    return question, search_terms
+
 def context_processor(documents):
-    return "\n".join([doc.page_content for doc in documents])
+    """
+    Process and format context for better LLM understanding
+    """
+    if not documents:
+        return "No relevant information found in the video transcript."
+    
+    # Format context with better structure
+    formatted_contexts = []
+    for i, doc in enumerate(documents, 1):
+        # Clean and format each chunk
+        content = doc.page_content.strip()
+        if content:
+            formatted_contexts.append(f"Transcript Segment {i}:\n{content}\n")
+    
+    return "\n".join(formatted_contexts)
 
 def build_chain(retriever):
     llm = GoogleGenerativeAI(
